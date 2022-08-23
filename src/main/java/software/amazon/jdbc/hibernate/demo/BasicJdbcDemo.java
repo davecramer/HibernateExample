@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.hibernate.brmeyer.demo;
+package software.amazon.jdbc.hibernate.demo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.hibernate.brmeyer.demo.entity.Skill;
-import org.hibernate.brmeyer.demo.entity.Tool;
-import org.hibernate.brmeyer.demo.entity.User;
+import software.amazon.jdbc.hibernate.demo.entity.Skill;
+import software.amazon.jdbc.hibernate.demo.entity.Tool;
+import software.amazon.jdbc.hibernate.demo.entity.User;
 
 /**
  * The Class BasicJdbcDemo.

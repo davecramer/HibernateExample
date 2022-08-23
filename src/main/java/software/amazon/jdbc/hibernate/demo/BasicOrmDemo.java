@@ -18,27 +18,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.hibernate.brmeyer.demo;
+package software.amazon.jdbc.hibernate.demo;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-
 import org.hibernate.Hibernate;
-import org.hibernate.brmeyer.demo.entity.Skill;
-import org.hibernate.brmeyer.demo.entity.Tool;
-import org.hibernate.brmeyer.demo.entity.User;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import software.amazon.jdbc.hibernate.demo.entity.Comment;
+import software.amazon.jdbc.hibernate.demo.entity.Community;
+import software.amazon.jdbc.hibernate.demo.entity.Donation;
+import software.amazon.jdbc.hibernate.demo.entity.Project;
+import software.amazon.jdbc.hibernate.demo.entity.ServiceEvent;
+import software.amazon.jdbc.hibernate.demo.entity.Skill;
+import software.amazon.jdbc.hibernate.demo.entity.Tool;
+import software.amazon.jdbc.hibernate.demo.entity.User;
+import org.hibernate.cfg.Configuration;
 
 /**
- * The Class BasicJpaDemo.
+ * The Class BasicOrmDemo.
  *
  * @author Brett Meyer
  */
-public class BasicJpaDemo {
+public class BasicOrmDemo {
 	
 	/**
 	 * The main method.
@@ -86,10 +91,10 @@ public class BasicJpaDemo {
 	 * @throws Exception the exception
 	 */
 	private static void insertUser(User user) throws Exception {
-		EntityManager entityManager = openEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist( user ); // cascades the tool & skill relationships
-		entityManager.getTransaction().commit();
+		Session session = openSession();
+		session.getTransaction().begin();
+		session.persist( user ); // cascades the tool & skill relationships
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -99,10 +104,10 @@ public class BasicJpaDemo {
 	 * @throws SQLException the SQL exception
 	 */
 	private static void insertTool(Tool tool) throws SQLException {
-		EntityManager entityManager = openEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist( tool );
-		entityManager.getTransaction().commit();
+		Session session = openSession();
+		session.getTransaction().begin();
+		session.persist( tool );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -112,10 +117,10 @@ public class BasicJpaDemo {
 	 * @throws SQLException the SQL exception
 	 */
 	private static void insertSkill(Skill skill) throws SQLException {
-		EntityManager entityManager = openEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist( skill );
-		entityManager.getTransaction().commit();
+		Session session = openSession();
+		session.getTransaction().begin();
+		session.persist( skill );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -126,41 +131,48 @@ public class BasicJpaDemo {
 	 * @throws SQLException the SQL exception
 	 */
 	private static User getUser(int id) throws SQLException {
-		EntityManager entityManager = openEntityManager();
+		Session session = openSession();
 		
-		User user = entityManager.find( User.class, id );
+		User user = (User) session.get( User.class, id );
 		
-//		Query query = entityManager.createQuery( "SELECT u FROM User u WHERE u.id=:id" );
+//		Query query = session.createQuery( "SELECT u FROM User u WHERE u.id=:id" );
 //		query.setParameter( "id", id );
-//		User user = (User) query.getSingleResult();
+//		User user = (User) query.uniqueResult();
 		
-//		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<User> criteria = builder.createQuery( User.class );
-//		Root<User> root = criteria.from( User.class );
-//		criteria.select( root );
-//		criteria.where( builder.equal( root.get( "id" ), id ) );
-//		User user = entityManager.createQuery( criteria ).getSingleResult();
+//		User user = (User) session.createCriteria( User.class )
+//				.add( Restrictions.eq( "id", id ) )
+//				.uniqueResult();
 		
 		Hibernate.initialize( user.getTools() );
 		Hibernate.initialize( user.getSkills() );
 		
-		entityManager.close();
+		session.close();
 		
 		return user;
 	}
 	
-	/** The entity manager factory. */
-	private static EntityManagerFactory entityManagerFactory = null;
+	/** The session factory. */
+	private static SessionFactory sessionFactory = null;
 	
 	/**
-	 * Open entity manager.
+	 * Open session.
 	 *
-	 * @return the entity manager
+	 * @return the session
 	 */
-	private static EntityManager openEntityManager() {
-		if (entityManagerFactory == null) {
-			entityManagerFactory = Persistence.createEntityManagerFactory( "Demo" );
+	private static Session openSession() {
+		if (sessionFactory == null) {
+			final Configuration configuration = new Configuration();
+			configuration.addAnnotatedClass( User.class );
+			configuration.addAnnotatedClass( Tool.class );
+			configuration.addAnnotatedClass( Skill.class );
+			configuration.addAnnotatedClass( Community.class );
+			configuration.addAnnotatedClass( Donation.class );
+			configuration.addAnnotatedClass( Comment.class );
+			configuration.addAnnotatedClass( ServiceEvent.class );
+			configuration.addAnnotatedClass( Project.class );
+			
+			sessionFactory = configuration.buildSessionFactory( new StandardServiceRegistryBuilder().build() );
 		}
-		return entityManagerFactory.createEntityManager();
+		return sessionFactory.openSession();
 	}
 }

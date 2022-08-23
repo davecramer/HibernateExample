@@ -1,16 +1,14 @@
-package org.hibernate.brmeyer.demo.entity;
+package software.amazon.jdbc.hibernate.demo.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 /**
- * The Class Community.
+ * The Class Skill.
  */
 @Entity
-public class Community {
+public class Skill {
 	
 	/** The id. */
 	@Id
@@ -18,12 +16,7 @@ public class Community {
 	private int id;
 
 	/** The name. */
-	@Column(name = "name")
 	private String name;
-
-	/** The creator. */
-	@ManyToOne
-	private User creator = null;
 
 	/**
 	 * Gets the id.
@@ -59,23 +52,5 @@ public class Community {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Gets the creator.
-	 *
-	 * @return the creator
-	 */
-	public User getCreator() {
-		return creator;
-	}
-
-	/**
-	 * Sets the creator.
-	 *
-	 * @param creator the new creator
-	 */
-	public void setCreator(User creator) {
-		this.creator = creator;
 	}
 }

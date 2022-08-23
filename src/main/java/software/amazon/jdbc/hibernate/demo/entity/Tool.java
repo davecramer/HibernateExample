@@ -1,14 +1,14 @@
-package org.hibernate.brmeyer.demo.entity;
+package software.amazon.jdbc.hibernate.demo.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 /**
- * The Class Skill.
+ * The Class Tool.
  */
 @Entity
-public class Skill {
+public class Tool {
 	
 	/** The id. */
 	@Id

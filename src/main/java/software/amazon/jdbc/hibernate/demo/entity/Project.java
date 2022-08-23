@@ -1,4 +1,4 @@
-package org.hibernate.brmeyer.demo.entity;
+package software.amazon.jdbc.hibernate.demo.entity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
